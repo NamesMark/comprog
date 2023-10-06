@@ -1,0 +1,100 @@
+1.
+SELECT * FROM participants;
+2.
+SELECT COUNT(DISTINCT institution) AS 'Number of Distinct Insti'
+FROM participants;
+3.
+SELECT username AS 'Div 2 Ranklist'
+--SELECT *
+FROM results
+WHERE rating BETWEEN 1600 AND 1999
+ORDER by score DESC
+;
+
+4.
+Problem
+You have a table Submissions, with 3 columns, as follows:
+
+Submissions
+(
+    problem_name VARCHAR(255),
+    verdict VARCHAR(255),
+    seconds INT
+);
+These are all the submissions made by a single participant in the contest.
+
+Each row corresponds to each submission that they have made.
+Different submissions can be on different problems.
+verdict is always one of these: "Accepted", "Time Limit Exceeded", "Wrong Answer", "Compilation Error", or "Runtime Error".
+seconds refers to the number of seconds since the start of the contest, when they made this submission. You are guaranteed that no two submissions have the same seconds.
+The 'Time taken for a problem' is defined to be the earliest time (in seconds) when the participant got an 'Accepted' verdict for that problem.
+
+The 'Total Time' is defined to be the sum of 'Time taken for a problem' over all the problems that the participant eventually got Accepted.
+
+Your task is to output the Total Time for this participant.
+
+Have the column header in the output as "Total Time".
+
+SELECT SUM(min_seconds) AS 'Total Time'
+FROM (
+    SELECT 
+        problem_name
+        , MIN(seconds) AS min_seconds
+    FROM submissions
+    WHERE verdict = 'Accepted'
+    GROUP BY problem_name
+);
+
+
+5. 
+Problem
+Given an array A[1],A[2],…,A[N], you need to find the maximum sum among all its subarrays.
+
+Note that a subarray is any contiguous set of elements of the array.
+
+But the array is given to you as a database table:
+
+You have a table ArrayTable, with 2 columns, as follows:
+
+ArrayTable
+(
+    key1 INT,
+    val1 INT
+);
+
+key1 corresponds to the index, and val1 corresponds to the value. That is, 
+
+A[key1]=val1.
+It is guaranteed that if there are a total of 
+N rows in the table, then all the  key1s are exactly {1,2,…,N}.
+Your task is to output the maximum subarray sum.
+
+Have the column header in the output as "Max Subarray Sum".
+
+
+WITH 
+    Cumulative AS (
+        SELECT        
+            key1
+            , SUM(val1) OVER (ORDER BY key1 ASC) AS cum
+        FROM
+            ArrayTable
+    ),
+
+    MinCum AS (
+        SELECT
+            key1
+            , COALESCE(MIN(cum) OVER (ORDER BY key1 ASC ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 0) AS min_cum_prev
+        FROM
+            Cumulative
+    )
+
+SELECT
+    MAX(cum.cum - mincum.min_cum_prev) AS 'Max Subarray Sum'
+FROM
+    Cumulative cum
+JOIN
+    MinCum mincum ON cum.key1 = mincum.key1;
+;
+
+--SELECT * FROM ArrayTable;
