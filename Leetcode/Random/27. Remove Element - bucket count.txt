@@ -1,0 +1,29 @@
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        if (val > 50 || nums.length == 0) { 
+            return nums.length; // given constraints, we can return immediately
+        }
+
+        int[] count = new int[51];
+
+        for (int n: nums) {
+            count[n]++;
+        }
+
+        int k = nums.length - count[val]; // number of elements not equal to val
+
+        int pointer = 0;
+        for (int i = 0; i < 51; i++) {
+            if (i == val) {
+                continue;
+            }
+
+            for (int j = 0; j < count[i]; j++) {
+                nums[pointer] = i;
+                pointer++;
+            }
+        }
+        
+        return k;
+    }
+}

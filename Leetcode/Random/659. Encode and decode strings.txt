@@ -1,0 +1,34 @@
+public class Solution {
+    /*
+     * @param strs: a list of strings
+     * @return: encodes a list of strings to a single string.
+     */
+    public String encode(List<String> strs) {
+        StringBuilder sb = new StringBuilder();
+
+        for (String s: strs) {
+            sb.append(s.length()).append("|").append(s);
+        }
+
+        return sb.toString();
+    }
+
+    /*
+     * @param str: A string
+     * @return: decodes a single string to a list of strings
+     */
+    public List<String> decode(String str) {
+        List<String> decoded = new ArrayList<>();
+        int i = 0;
+
+        while (i < str.length()) {
+            int delimiterPos = str.indexOf("|", i);
+            int size = Integer.parseInt(str.substring(i, delimiterPos));
+            i = delimiterPos + 1;
+            decoded.add(str.substring(i, i + size));
+            i += size;
+        }
+
+        return decoded;
+    }
+}

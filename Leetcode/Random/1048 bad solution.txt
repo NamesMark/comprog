@@ -1,0 +1,35 @@
+class Solution {
+    public int longestStrChain(String[] words) {
+        Arrays.sort(words, Comparator.comparingInt(String::length));
+        Map(String, Integer) lengths = new HashMap<>();
+        int maxLen = 0;
+
+        for (String word: words) {
+            int currLen = 0;
+            if (words[i].length() != words[i-1].length()+1) {
+                left = i;
+                continue;
+            }
+            if (!isPredecessor(words[i], words[i-1])) {
+                left = i;
+            }
+        }
+        return words.length-left;
+    }
+
+    private boolean isPredecessor(String current, String previous) {
+        int p1 = 0;
+        int p2 = 0;
+
+        for (p1 = 0; p1 < current.length() && p2 < previous.length(); p1++, p2++) {
+            if (current.charAt(p1) != previous.charAt(p2)) {
+                p1--;
+            }
+            if (p1>p2+1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
