@@ -1,0 +1,7 @@
+pub fn majority_element(nums: Vec<i32>) -> i32 {
+	nums.into_iter()
+		.fold((0, 0), |(mut count, mut val), num| {
+			count += [-1, 1][(num == val) as usize];
+			(count.max(0), val ^ ((val ^ num) & (-((count < 0) as i32))))
+		}).1
+}
